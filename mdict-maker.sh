@@ -101,8 +101,8 @@ fi
 
 echo 'All done!'
 
-# read -r -p 'Remove intermediary files? (y/n) ' answer
+read -r -p 'Remove intermediary files? (y/n) ' answer
 
-# if [[ $answer =~ ^[Yy]$ ]]; then
+if [[ $answer =~ ^[Yy]$ ]]; then
   rm -vrf "$db_file" "${csv_file}" "${db_file}.txt" title.html description.html "$res_dir"
-# fi
+fi
