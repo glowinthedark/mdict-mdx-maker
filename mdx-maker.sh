@@ -25,12 +25,7 @@ if [[ "z" == "z$1" ]]; then
 fi
 
 input_file="$1"
-
-if [[ "$input_file" =~ .*\.dz ]]; then
-    echo 'Unpacking .dz file...'
-    dictzip -k -d "$1"
-    input_file="${1%.*}"
-fi
+input_file_unpacked=
 
 db_file="${input_file%.*}.db"
 csv_file="${input_file%.*}.csv"
@@ -47,48 +42,55 @@ if [ -e "$db_file" ]; then
     fi
 fi
 
-pyglossary --cmd "$input_file" "$csv_file" --write-format=Csv
+pyglossary --cmd "$input_file" "$db_file" --write-format=AyanDictSQLite
 
 # Connect to the SQLite3 database
 sqlite3 "$db_file" <<EOF
--- Create tables and indexes
-CREATE TABLE mdx (entry TEXT NOT NULL, paraphrase TEXT NOT NULL);
-CREATE TABLE meta (key TEXT NOT NULL, value TEXT NOT NULL);
-CREATE INDEX mdx_entry_index ON mdx (entry);
+
+-- Step 1: Rename columns in the 'entry' table
+ALTER TABLE entry RENAME COLUMN term TO entry;
+ALTER TABLE entry RENAME COLUMN article TO paraphrase;
+
+-- Step 2: Rename the 'entry' table to 'mdx'
+ALTER TABLE entry RENAME TO mdx;
+
+-- Step 3: Drop the 'alt' and 'fuzzy3' tables
+DROP TABLE IF EXISTS alt;
+DROP TABLE IF EXISTS fuzzy3;
+
+-- Step 4: Rename the 'name' column in the 'meta' table to 'title'
+UPDATE meta SET key = 'title' WHERE key = 'name';
+
 EOF
 
-# create sqlite db from csv
-sqlite3 "$db_file"  ".mode csv"  ".import ${csv_file} mdx" ".exit"
-
-sqlite3 "$db_file" "INSERT INTO meta (key, value) SELECT 'title', paraphrase FROM mdx WHERE entry = '#name'; DELETE FROM mdx WHERE entry = '#name';"
-sqlite3 "$db_file" "INSERT INTO meta (key, value) SELECT entry, paraphrase FROM mdx WHERE entry = '#sourceLang'; DELETE FROM mdx WHERE entry = '#sourceLang';"
-sqlite3 "$db_file" "INSERT INTO meta (key, value) SELECT entry, paraphrase FROM mdx WHERE entry = '#targetLang'; DELETE FROM mdx WHERE entry = '#targetLang';"
-sqlite3 "$db_file" "INSERT INTO meta (key, value) SELECT 'creationdate', paraphrase FROM mdx WHERE entry = '#creationTime'; DELETE FROM mdx WHERE entry = '#creationTime';"
-sqlite3 "$db_file" "INSERT INTO meta (key, value) VALUES ('description', 'created with <a href=https://github.com/glowinthedark/mdx-maker>mdx-maker</a>');"
-sqlite3 "$db_file" "INSERT INTO meta (key, value) VALUES ('format', 'Html');"
-
-# get the title
 sqlite3 "$db_file" ".output title.html" "SELECT value FROM meta WHERE key = 'title';"
-
 cp title.html description.html
 
 mdict --db-txt "$db_file"
-
 mdict --title title.html --description description.html -a "$db_file".txt "${mdx_file}"
 
-echo 'Created MDX file: ${mdx_file}'
+echo "Created MDX file: ${mdx_file}"
 echo 'Checking for MDD resources...'
 
+
+# extract resources in Csv mode and create MDD (skip for DSL)
+if [[ ! "${input_file}" =~ \.(dz|dsl)$ ]]; then
+  pyglossary --cmd "${input_file}" "${csv_file}" --write-format=Csv
+else
+  echo "skip csv step for "${input_file}"
+fi
+
 if [[ -d "${res_dir}" ]]; then
-    echo "Media files found!"
+    echo "Media files detected!"
     mdict --title title.html --description description.html -a "${res_dir}" "${mdd_file}"
 else
-    echo "No media files found! Skipping creating MDD file."
+    echo "No media files found! Skip creating MDD."
 fi
 
 echo 'All done!'
-#read -r -p "Remove intermediary files? (y/n) " answer
+
+read -r -p 'Remove intermediary files? (y/n) ' answer
 
 if [[ $answer =~ ^[Yy]$ ]]; then
-    rm -v "$db_file" "${csv_file}" "${res_dir}" "${db_file}.txt" title.html description.html
+  rm -vrf "$db_file" "${csv_file}" "${db_file}.txt" title.html description.html "$res_dir"
 fi
