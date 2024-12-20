@@ -67,6 +67,7 @@ EOF
 
 sqlite3 "$db_file" ".output title.html" "SELECT value FROM meta WHERE key = 'title';"
 cp title.html description.html
+echo '<br>created with <a href="https://github.com/glowinthedark/mdict-mdx-maker">mdict-maker</a>' >> description.html
 
 mdict --db-txt "$db_file"
 mdict --title title.html --description description.html -a "$db_file".txt "${mdx_file}"
