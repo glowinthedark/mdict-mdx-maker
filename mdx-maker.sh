@@ -2,12 +2,12 @@
 
 # SOURCE: https://github.com/glowinthedark/mdx-maker, glwnd2030@gmail.com
 
-# Convert to Octopus MDict MDX/MDD from AARD2 .SLOB, Lingvo .DSL, Stardict .IFO, 
+# Convert to Octopus MDict MDX/MDD from AARD2 .SLOB, Lingvo .DSL, Stardict .IFO,
 # requirements:
 #   - pyglossary
 #   - mdict-utils
 #   - sqlite3
-
+#   - unzip
 #set -x
 set -e
 
@@ -15,18 +15,19 @@ checktool() {
     command -v "$1" 2>/dev/null || { echo -n "ERROR: $1 not found! $2 " >&2; exit 1; }
 }
 
+echo "Check required tools..."
 checktool pyglossary "Install with: 'pip3 install pyglossary'"
 checktool mdict "Install with: 'pip3 install mdict-utils'"
 checktool sqlite3 "Install with OS package manager, e.g. 'apt install sqlite3'"
+checktool unzip "Install with OS package manager, e.g. 'apt install unzip'"
 
 if [[ "z" == "z$1" ]]; then
-    printf '\n\tUSAGE: %s dictionary.dsl\n' "$0"
+    printf '\n  USAGE: %s dictionary.dsl\n\n' "$(basename $0)"
     exit 1
 fi
 
 input_file="$1"
-input_file_unpacked=
-
+input_file_base_name="${1%%.*}" # Extract the base name
 db_file="${input_file%.*}.db"
 csv_file="${input_file%.*}.csv"
 res_dir="${csv_file}_res"
@@ -72,12 +73,21 @@ mdict --title title.html --description description.html -a "$db_file".txt "${mdx
 echo "Created MDX file: ${mdx_file}"
 echo 'Checking for MDD resources...'
 
-
-# extract resources in Csv mode and create MDD (skip for DSL)
-if [[ ! "${input_file}" =~ \.(dz|dsl)$ ]]; then
+# extract resources in Csv mode and create MDD (skip for DSL/DZ)
+if [[ ! "${input_file}" =~ .(dz|dsl)$ ]]; then
   pyglossary --cmd "${input_file}" "${csv_file}" --write-format=Csv
 else
-  echo "skip csv step for "${input_file}"
+  echo "skip csv step for ${input_file}"
+fi
+
+if [[ ! -d "${res_dir}" ]]; then
+    # check for xyz.files.zip resources and unpack them
+    for zip_res_file in $(compgen -G "${input_file_base_name}*files.zip"); do
+      echo "Processing file: $zip_res_file"
+
+      echo "Unpacking ${zip_res_file} to: ${res_dir}... Please wait..."
+      unzip -q "$zip_res_file" -d "${res_dir}"
+    done
 fi
 
 if [[ -d "${res_dir}" ]]; then
