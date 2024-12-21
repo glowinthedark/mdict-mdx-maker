@@ -14,7 +14,11 @@
 
 ## Pyglossary dependencies
 
-Converting to and from specific formats with pyglossary requires installation of additional python modules. To install _all_ modules:
+Converting to and from specific formats with pyglossary requires installation of additional python modules.
+
+For example, for converting to and from AARD2 .slob `pyicu` and `python-lzo` will be needed. To convert ZIM files from [library.kiwix.org](https://library.kiwix.org/) `libzim` needs to be installed, etc.
+
+To install _all_ modules:
 
 ```bash
 python3 -m pip install pymorphy2 lxml polib PyYAML beautifulsoup4 html5lib PyICU python-lzo python-idzip marisa-trie libzim mistune xxhash
