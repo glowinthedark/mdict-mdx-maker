@@ -12,6 +12,14 @@
 | [sqlite3](https://www.sqlite.org/download.html) | already present on linux |
 | unzip, iconv, file | preinstalled on linux<br>on window use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install), [msys](https://www.msys2.org/), [cygwin](https://www.cygwin.com/), [cmder](https://cmder.app/), etc |
 
+## Pyglossary dependencies
+
+Converting to and from specific formats with pyglossary requires installation of additional python modules. To install _all_ modules:
+
+```bash
+python3 -m pip install pymorphy2 lxml polib PyYAML beautifulsoup4 html5lib PyICU python-lzo python-idzip marisa-trie libzim mistune xxhash
+```
+
 ## Usage examples
 
 ```bash
