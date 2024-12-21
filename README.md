@@ -16,7 +16,7 @@
 
 Converting to and from specific formats with pyglossary requires installation of additional python modules.
 
-For example, for converting to and from AARD2 .slob `pyicu` and `python-lzo` will be needed. To convert ZIM files from [library.kiwix.org](https://library.kiwix.org/) `libzim` needs to be installed, etc.
+For example, in order to convert to and from AARD2 .slob `pyicu` and `python-lzo` modules will be needed. To convert ZIM files from [library.kiwix.org](https://library.kiwix.org/) `libzim` needs to be installed, etc.
 
 To install _all_ modules:
 
