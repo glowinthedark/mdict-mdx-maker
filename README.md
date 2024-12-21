@@ -24,6 +24,13 @@ To install _all_ modules:
 python3 -m pip install pymorphy2 lxml polib PyYAML beautifulsoup4 html5lib PyICU python-lzo python-idzip marisa-trie libzim mistune xxhash
 ```
 
+Installing `pyicu` and `python-lzo` from source requires development tools. For some operating systems it might be possible to install precompiled versions using the following commands:
+
+```bash
+pip install --extra-index-url https://glowinthedark.github.io/python-lzo/ --index-strategy unsafe-best-match python-lzo
+pip install --extra-index-url https://glowinthedark.github.io/pyicu-build --index-strategy unsafe-best-match pyicu
+```
+
 ## Usage examples
 
 ```bash
