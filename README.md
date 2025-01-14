@@ -21,7 +21,7 @@ For example, in order to convert to and from AARD2 .slob `pyicu` and `python-lzo
 To install _all_ modules:
 
 ```bash
-python3 -m pip install pymorphy2 lxml polib PyYAML beautifulsoup4 html5lib PyICU python-lzo python-idzip marisa-trie libzim mistune xxhash
+python3 -m pip install pymorphy2 lxml biplist polib PyYAML beautifulsoup4 html5lib PyICU python-lzo python-idzip marisa-trie libzim mistune xxhash
 ```
 
 Installing `pyicu` and `python-lzo` from source requires development tools such as xcode on macos, `build-essential` on linux, or msvscompiler/mingw on windows. For some operating systems it might be possible to install precompiled versions using the following commands:
