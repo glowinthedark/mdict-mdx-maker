@@ -10,7 +10,7 @@
 #   - sqlite3
 #   - unzip
 #set -x
-set -e
+# set -e
 
 checktool() {
     command -v "$1" 2>/dev/null || { echo -n "ERROR: $1 not found! $2 " >&2; exit 1; }
