@@ -43,7 +43,8 @@ rm -rf title.html description.html
 if [ -e "$db_file" ]; then
     #read -p "$db_file already exists! OVERWRITE? (y/n) " answer
     #if [[ $answer =~ ^[Yy]$ ]]; then
-        rm -v "$db_file"
+    "$db_file already exists! OVERWRITING..."
+    rm -v "$db_file"
     #fi
 fi
 
