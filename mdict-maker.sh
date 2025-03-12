@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# MDict MDX/MDD Maker v 0.12
-# https://github.com/glowinthedark/mdict-mdx-maker, glwnd2030@gmail.com, 2024
+# MDict MDX/MDD Maker v 0.13
+# https://github.com/glowinthedark/mdict-mdx-maker, glwnd2030@gmail.com, 2025
 
 # Convert to Octopus MDict MDX/MDD from AARD2 .SLOB, Lingvo .DSL, Stardict .IFO,
 # requirements:
