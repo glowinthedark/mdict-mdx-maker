@@ -41,10 +41,10 @@ mdd_file="${input_file_basename%.*}.mdd"
 rm -rf title.html description.html
 
 if [ -e "$db_file" ]; then
-    read -p "$db_file already exists! OVERWRITE? (y/n) " answer
-    if [[ $answer =~ ^[Yy]$ ]]; then
+    #read -p "$db_file already exists! OVERWRITE? (y/n) " answer
+    #if [[ $answer =~ ^[Yy]$ ]]; then
         rm -v "$db_file"
-    fi
+    #fi
 fi
 
 pyglossary --cmd "$input_file" "$db_file" --write-format=AyanDictSQLite
@@ -118,6 +118,6 @@ fi
 
 echo 'All done!'
 
-if [[ "$2" == "-y" || "$(read -r -p 'Remove intermediary files? (y/n) ' answer && echo "$answer")" =~ ^[Yy]$ ]]; then
+#if [[ "$2" == "-y" || "$(read -r -p 'Remove intermediary files? (y/n) ' answer && echo "$answer")" =~ ^[Yy]$ ]]; then
   rm -vrf "$db_file" "${csv_file}" "${db_file}.txt" title.html description.html "$res_dir"
-fi
+#fi
