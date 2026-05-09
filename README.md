@@ -7,7 +7,7 @@
   
 | Tool | Install command |
 | ------------- | ------------- |
-| [pyglossary](https://github.com/ilius/pyglossary) | `pip3 install pyglossary` |
+| [pyglossary](https://github.com/ilius/pyglossary) | `pip3 install "pyglossary[full]"` |
 | [mdict-utils](https://github.com/liuyug/mdict-utils) | `pip3 install mdict-utils` |
 | [sqlite3](https://www.sqlite.org/download.html) | already present on linux |
 | unzip, iconv, file | preinstalled on linux<br>on window use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install), [msys](https://www.msys2.org/), [cygwin](https://www.cygwin.com/), [cmder](https://cmder.app/), etc |
