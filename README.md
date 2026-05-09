@@ -22,16 +22,10 @@ To install _all_ modules:
 
 #### Step 1
 ```bash
-python3 -m pip install pymorphy2 lxml biplist polib PyYAML beautifulsoup4 html5lib PyICU python-lzo python-idzip marisa-trie libzim mistune xxhash
+python3 -m pip install "pyglossary[full]"
 ```
 
 Installing `pyicu` and `python-lzo` from source requires development tools such as xcode on macos, `build-essential` on linux, or msvscompiler/mingw on windows. If the command for module installation above failed because of unsatisfied dependencies, try running the  commands given below in **Step 1B**,which will install precompiled versions of the modules, and then run again the command from Step 1 above.
-
-#### Step 1B
-```bash
-pip install --extra-index-url https://glowinthedark.github.io/python-lzo/ --index-strategy unsafe-best-match python-lzo
-pip install --extra-index-url https://glowinthedark.github.io/pyicu-build --index-strategy unsafe-best-match pyicu
-```
 
 ## Usage examples
 
