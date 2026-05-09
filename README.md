@@ -24,7 +24,7 @@ To install `pyglossary` with _all_ modules:
 pip3 install "pyglossary[all]" lxml beautifulsoup4 PyICU PyYAML marisa-trie libzim python-lzo html5lib
 ```
 
-OR install the latest master branch:
+OR install the latest bleeding edge `master` branch:
 
 ```bash
 pip3 install -U "pyglossary[all] @ git+https://github.com/ilius/pyglossary.git" lxml beautifulsoup4 PyICU PyYAML marisa-trie libzim python-lzo html5lib
