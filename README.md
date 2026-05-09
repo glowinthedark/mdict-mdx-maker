@@ -21,7 +21,6 @@ For example, in order to convert to and from AARD2 .slob `pyicu` and `python-lzo
 To install `pyglossary` with _all_ modules:
 
 ```bash
-pip3 install "pyglossary[all]"
 pip3 install "pyglossary[all]" lxml beautifulsoup4 PyICU PyYAML marisa-trie libzim python-lzo html5lib
 ```
 
