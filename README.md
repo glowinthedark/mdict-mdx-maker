@@ -25,8 +25,9 @@ To install `pyglossary` with _all_ modules:
 python3 -m pip install "pyglossary[full]"
 ```
 
+<!--
 Installing `pyicu` and `python-lzo` from source requires development tools such as xcode on macos, `build-essential` on linux, or msvscompiler/mingw on windows. If the command for module installation above failed because of unsatisfied dependencies, try running the  commands given below in **Step 1B**,which will install precompiled versions of the modules, and then run again the command from Step 1 above.
-
+-->
 ## Usage examples
 
 ```bash
