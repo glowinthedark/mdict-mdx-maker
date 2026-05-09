@@ -7,7 +7,7 @@
   
 | Tool | Install command |
 | ------------- | ------------- |
-| [pyglossary](https://github.com/ilius/pyglossary) | `pip3 install "pyglossary[full]"` |
+| [pyglossary](https://github.com/ilius/pyglossary) | `pip3 install pyglossary` |
 | [mdict-utils](https://github.com/liuyug/mdict-utils) | `pip3 install mdict-utils` |
 | [sqlite3](https://www.sqlite.org/download.html) | already present on linux/macos |
 | unzip, iconv, file | preinstalled on linux<br>on window use [WSL](https://learn.microsoft.com/en-us/windows/wsl/install), [msys](https://www.msys2.org/), [cygwin](https://www.cygwin.com/), [cmder](https://cmder.app/), etc |
@@ -21,7 +21,8 @@ For example, in order to convert to and from AARD2 .slob `pyicu` and `python-lzo
 To install `pyglossary` with _all_ modules:
 
 ```bash
-python3 -m pip install "pyglossary[full]"
+python3 -m pip install pyglossary
+python3 -m pip install -r https://raw.githubusercontent.com/ilius/pyglossary/refs/heads/master/requirements.txt
 ```
 
 <!--
