@@ -20,7 +20,6 @@ For example, in order to convert to and from AARD2 .slob `pyicu` and `python-lzo
 
 To install `pyglossary` with _all_ modules:
 
-#### Step 1
 ```bash
 python3 -m pip install "pyglossary[full]"
 ```
