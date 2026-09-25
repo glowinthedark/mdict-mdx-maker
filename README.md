@@ -14,7 +14,7 @@ Faster optimized python3 version.
 | [pyglossary](https://github.com/ilius/pyglossary) | `pip3 install "pyglossary[all]"` |
 | [mdict-utils](https://github.com/liuyug/mdict-utils) | `pip3 install mdict-utils` |
 
-OR, ru with [**`uv`**](https://docs.astral.sh/uv/getting-started/installation/) reads the dependencies from the script's inline metadata ([PEP 723](https://peps.python.org/pep-0723/)) into a cached isolated env
+OR, ru with [**`uv`**](https://docs.astral.sh/uv/getting-started/installation/) <sup>this downloads dependencies from the script's inline metadata ([PEP 723](https://peps.python.org/pep-0723/)) into a temporary cached isolated env without touching your system or user modules</sup>
 
 ```bash
 # run using local file
