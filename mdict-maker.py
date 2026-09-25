@@ -129,7 +129,7 @@ def main() -> None:
                         con.executemany("INSERT OR IGNORE INTO mdd VALUES (?, ?)", ((k, read()) for k, read in members.items() if k not in have))
                 con.commit()
 
-                desc = "<br>".join(filter(None, (title, info))) + CREDIT
+                desc = "<br>".join(filter(None, (title, info if (info or "").strip() != title.strip() else None))) + CREDIT
                 if (ann := src.with_name(f"{stem}.ann")).is_file():  # Lingvo annotation, usually UTF-16 with BOM
                     raw = ann.read_bytes()
                     enc = "utf-16" if raw[:2] in (codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE) else "utf-8-sig"
