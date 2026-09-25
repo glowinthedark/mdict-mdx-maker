@@ -77,7 +77,14 @@ DROP TABLE IF EXISTS fuzzy3;
 UPDATE meta SET key = 'title' WHERE key = 'name';
 EOF
 
-sqlite3 "$db_file" ".output title.html" "SELECT value FROM meta WHERE key = 'title';"
+# Pin the output format: newer CLIs (3.53 here) default to the boxed "qbox" mode when
+# started from a terminal, and ~/.sqliterc can set any mode or headers — either one
+# would land verbatim in the title. -init /dev/null skips ~/.sqliterc; -batch,
+# -list and -noheader give the bare value on every sqlite3 version.
+sqlite3 -batch -init /dev/null -list -noheader "$db_file" \
+    "SELECT value FROM meta WHERE key = 'title';" > title.html
+# no title in the source: fall back to the file name rather than an empty title
+[ -s title.html ] || printf '%s\n' "${input_file_basename%.*}" > title.html
 cp title.html description.html
 echo '<br>created with <a href="https://github.com/glowinthedark/mdict-mdx-maker">mdict-maker</a>' >> description.html
 
