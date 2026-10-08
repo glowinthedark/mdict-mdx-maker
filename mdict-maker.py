@@ -14,6 +14,8 @@ usage:
   uv run mdict-maker.py ldoce6.dsl x.bgl       # deps from the inline metadata, nothing installed locally
   uv run --with PyICU --with python-lzo mdict-maker.py wiki.slob
   uv run --with libzim mdict-maker.py apple.stackexchange.com_en_all_2024-10.zim
+  mdict-maker.py -f tabfile words.dic          # force the input format when it can't be detected
+  mdict-maker.py -f list                       # show the readable formats
   uv run https://raw.githubusercontent.com/glowinthedark/mdict-mdx-maker/master/mdict-maker.py x.dsl
 
 https://github.com/glowinthedark/mdict-mdx-maker
@@ -66,12 +68,32 @@ def xdxf():  # lazy: lxml is optional and only needed for XDXF definitions
     return XdxfTransformer(encoding="utf-8")
 
 
+def read_format(hint: str) -> str:
+    """Resolve a pyglossary format by name, plugin module name or extension, case-insensitively."""
+    plugins = [Glossary.plugins[n] for n in Glossary.readFormats]
+    names = {k.lower().lstrip("."): p.name for p in plugins for k in (p.name, p.lname, *p.extensions)}
+    if fmt := names.get(hint.strip().lower().lstrip(".")):
+        return fmt
+    rows = "\n".join(f"  {p.name:<20} {' '.join(p.extensions) or '-':<28} {p.description}" for p in plugins)
+    msg = f"readable formats (-f accepts name or extension):\n{rows}"
+    if hint.strip().lower() == "list":
+        print(msg)
+        sys.exit(0)
+    sys.exit(f"Unknown input format {hint!r}; {msg}")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("inputs", nargs="+", type=Path, metavar="dictionary", help="e.g. ldoce6.dsl.dz wiki.slob x.ifo")
+    ap.add_argument("inputs", nargs="*", type=Path, metavar="dictionary", help="e.g. ldoce6.dsl.dz wiki.slob x.ifo")
+    ap.add_argument("-f", "--format", metavar="FORMAT", default="",
+                    help="input format for all inputs when autodetection fails, e.g. Tabfile, dsl, .ifo; 'list' shows all")
+    args = ap.parse_args()
     Glossary.init()
+    fmt = read_format(args.format) if args.format else ""
+    if not args.inputs:
+        ap.error("the following arguments are required: dictionary")
 
-    for src in ap.parse_args().inputs:
+    for src in args.inputs:
         stem = Path(src.stem if src.suffix.lower() in COMPRESSED else src.name).stem  # x.dsl.dz -> x
         # stage next to the outputs (not in a possibly RAM-backed /tmp); atomic rename on success
         with tempfile.TemporaryDirectory(prefix=f".{stem}-", dir=".") as tmp:
@@ -88,7 +110,7 @@ def main() -> None:
 
                 glos = Glossary()
                 try:
-                    glos.directRead(str(src))
+                    glos.directRead(str(src), formatName=fmt)
                     for e in tqdm(glos, desc=src.name, unit=" entries"):
                         if e.isData():
                             con.execute("INSERT OR IGNORE INTO mdd VALUES (?, ?)", (res_key(e.s_term), e.data))
