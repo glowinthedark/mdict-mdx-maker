@@ -2,6 +2,8 @@
 
 - Convert to Octopus MDict MDX/MDD any dictionary supported for reading by [pyglossary](https://github.com/ilius/pyglossary?tab=readme-ov-file#supported-formats), such as AARD2 .SLOB, Lingvo .DSL, Stardict .IFO, CSV, SQL etc. Handles and packs to `.MDD` associated resources, such as CSS, JS, JPG, PNG, MP3 files, etc.
 
+- to list all available input formats use `mdict-maker.py -f list`
+
 ## Python version: `mdict-maker.py`
 
 Faster optimized python3 version.
