@@ -43,6 +43,12 @@ uv run --with PyICU --with python-lzo mdict-maker.py eswiki20231201-vol-01.slob
 
 # multiple dictionaries at once; output goes to the current directory
 mdict-maker.py *.dsl *.bgl
+
+# force the input format when it can't be detected
+mdict-maker.py -f tabfile words.dic
+
+ # show accepted input formats (supported by pyglossary)
+mdict-maker.py -f list
 ```
 
 ## Bash version: `mdict-maker.sh` (DEPRECATED, UNMAINTAINED)
