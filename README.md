@@ -2,7 +2,7 @@
 
 - Convert to Octopus MDict MDX/MDD any dictionary supported for reading by [pyglossary](https://github.com/ilius/pyglossary?tab=readme-ov-file#supported-formats), such as AARD2 .SLOB, Lingvo .DSL, Stardict .IFO, CSV, SQL etc. Handles and packs to `.MDD` associated resources, such as CSS, JS, JPG, PNG, MP3 files, etc.
 
-## Python version: `mdict-maker.py` (recommended)
+## Python version: `mdict-maker.py`
 
 Faster optimized python3 version.
 
@@ -51,6 +51,7 @@ mdict-maker.py -f tabfile words.dic
 mdict-maker.py -f list
 ```
 
+<!--
 ## Bash version: `mdict-maker.sh` (DEPRECATED, UNMAINTAINED)
 
 ### Requirements
@@ -97,7 +98,7 @@ OR install the latest bleeding edge `master` branch:
 ```bash
 pip3 install -U "pyglossary[all] @ git+https://github.com/ilius/pyglossary.git" lxml beautifulsoup4 PyICU PyYAML marisa-trie libzim python-lzo html5lib
 ```
-
+-->
 <!--
 Installing `pyicu` and `python-lzo` from source requires development tools such as xcode on macos, `build-essential` on linux, or msvscompiler/mingw on windows. If the command for module installation above failed because of unsatisfied dependencies, try running the  commands given below in **Step 1B**,which will install precompiled versions of the modules, and then run again the command from Step 1 above.
 -->
