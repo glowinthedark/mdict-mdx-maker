@@ -4,7 +4,7 @@
 
 - to list all available input formats use `mdict-maker.py -f list`
 
-## Python version: [`mdict-maker.py`](https://github.com/glowinthedark/mdict-mdx-maker/blob/master/mdict-maker.py)
+## Python version: [`mdict-maker.py`](mdict-maker.py)
 
 Faster optimized python3 version.
 
