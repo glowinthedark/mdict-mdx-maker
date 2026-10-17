@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
 # PEP 723 inline metadata: `uv run` installs these into a cached, isolated env, no local install needed.
 # Kept to wheel-only deps; PyICU/python-lzo (slob) and libzim (zim) are added per run with `--with`.
 # /// script
@@ -10,7 +10,8 @@
 Output <name>.mdx (+ <name>.mdd for resources) goes to the current directory.
 
 usage:
-  mdict-maker.py ldoce6.dsl                    # after: pip3 install "pyglossary[all]" mdict-utils
+  mdict-maker.py ldoce6.dsl                    # shebang runs it via uv with the inline metadata below
+  python3 mdict-maker.py ldoce6.dsl            # python3 >= 3.12, after: pip3 install "pyglossary[all]" mdict-utils
   uv run mdict-maker.py ldoce6.dsl x.bgl       # deps from the inline metadata, nothing installed locally
   uv run --with PyICU --with python-lzo mdict-maker.py wiki.slob
   uv run --with libzim mdict-maker.py apple.stackexchange.com_en_all_2024-10.zim
@@ -32,6 +33,13 @@ import zipfile
 from contextlib import nullcontext
 from functools import cache, partial
 from pathlib import Path
+
+# the rest of this file must stay parseable by old interpreters (no `match`) for this check to run
+if sys.version_info < (3, 12):
+    sys.exit(
+        f"Python >= 3.12 required, {sys.executable} is {sys.version.split()[0]}\n"
+        f"run with uv (fetches a suitable Python):  uv run {sys.argv[0]} ..."
+    )
 
 try:
     from mdict_utils import writer as mdict
@@ -115,12 +123,11 @@ def main() -> None:
                         if e.isData():
                             con.execute("INSERT OR IGNORE INTO mdd VALUES (?, ?)", (res_key(e.s_term), e.data))
                             continue
-                        defi = e.defi
-                        match e.detectDefiFormat():
-                            case "m" if "\n" in defi:
-                                defi = f"<pre>{defi}</pre>"
-                            case "x":
-                                defi = xdxf().transformByInnerString(defi)
+                        defi, kind = e.defi, e.detectDefiFormat()
+                        if kind == "m" and "\n" in defi:
+                            defi = f"<pre>{defi}</pre>"
+                        elif kind == "x":
+                            defi = xdxf().transformByInnerString(defi)
                         defi = defi.replace("bword://", "entry://")
                         if "audio" in defi:
                             defi = AUDIO.sub(lambda m: f'<a href="sound://{m[1] or m[2]}">🔊</a>', defi)
