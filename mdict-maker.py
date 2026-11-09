@@ -17,6 +17,8 @@ usage:
   uv run --with libzim mdict-maker.py apple.stackexchange.com_en_all_2024-10.zim
   mdict-maker.py -f tabfile words.dic          # force the input format when it can't be detected
   mdict-maker.py -f list                       # show the readable formats
+  mdict-maker.py --description 'My <b>notes</b>' x.dsl   # replace the input's description (HTML allowed)
+  mdict-maker.py --no-credit x.dsl             # leave out the "created with mdict-maker" line
   uv run https://raw.githubusercontent.com/glowinthedark/mdict-mdx-maker/master/mdict-maker.py x.dsl
 
 https://github.com/glowinthedark/mdict-mdx-maker
@@ -95,6 +97,11 @@ def main() -> None:
     ap.add_argument("inputs", nargs="*", type=Path, metavar="dictionary", help="e.g. ldoce6.dsl.dz wiki.slob x.ifo")
     ap.add_argument("-f", "--format", metavar="FORMAT", default="",
                     help="input format for all inputs when autodetection fails, e.g. Tabfile, dsl, .ifo; 'list' shows all")
+    ap.add_argument("--description", metavar="TEXT", default=None,
+                    help="MDX description shown under the title (HTML allowed), replacing the input's own "
+                         "description and Lingvo .ann annotation; '' keeps just the title")
+    ap.add_argument("--no-credit", action="store_true",
+                    help='leave out the "created with mdict-maker" line from the MDX description')
     args = ap.parse_args()
     Glossary.init()
     fmt = read_format(args.format) if args.format else ""
@@ -158,8 +165,11 @@ def main() -> None:
                         con.executemany("INSERT OR IGNORE INTO mdd VALUES (?, ?)", ((k, read()) for k, read in members.items() if k not in have))
                 con.commit()
 
-                desc = "<br>".join(filter(None, (title, info if (info or "").strip() != title.strip() else None))) + CREDIT
-                if (ann := src.with_name(f"{stem}.ann")).is_file():  # Lingvo annotation, usually UTF-16 with BOM
+                if args.description is not None:  # replaces the input's description and .ann annotation
+                    info = args.description
+                desc = "<br>".join(filter(None, (title, info if (info or "").strip() != title.strip() else None)))
+                desc += "" if args.no_credit else CREDIT
+                if args.description is None and (ann := src.with_name(f"{stem}.ann")).is_file():  # Lingvo, often UTF-16
                     raw = ann.read_bytes()
                     enc = "utf-16" if raw[:2] in (codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE) else "utf-8-sig"
                     desc += f"<pre>{html.escape(raw.decode(enc, 'replace').strip())}</pre>"

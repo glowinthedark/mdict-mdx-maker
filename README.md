@@ -4,6 +4,10 @@
 
 - to list all available input formats use `mdict-maker.py -f list`
 
+- to set the MDX description (shown under the title; HTML allowed) use `--description 'TEXT'`; it replaces the input's own description, `--description ''` keeps just the title
+
+- to leave out the "created with mdict-maker" line from the description use `--no-credit`
+
 ## Python version: [`mdict-maker.py`](mdict-maker.py)
 
 Faster optimized python3 version.
